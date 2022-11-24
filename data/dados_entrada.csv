@@ -1,0 +1,53 @@
+"""
+    Universidade Federal de Santa Catarina
+    Laboratory of Applications and Research in Space - LARS
+    Orbital Mechanics Division
+
+    Título do Algoritmo= Dados de entrada para simulação orbital e radiação incidente
+    Autor= Rodrigo S. Cardozo
+    Versão= 0.0.5
+    Data= 24/10/2022
+
+"""
+
+Semi_Eixo_Maior = 7000  
+excentricidade = 0.0
+Nodo ascendente = 0.0
+Argumento do perigeu = 0.0  
+Anomalia verdadeira = 0.0 
+Inclinacao = 63.0
+mu = 398600  
+J2 = 1.08263e-3  
+Raio da Terra = 6378  
+numemor de orbitas = 1 
+
+"Dados da atitude"
+
+Velocidade angular em PSI = 0.0
+Velocidade angular em TETA = 0.0
+Velocidade angular em PHI = 0.001
+
+PSI0 = 0.0
+TETA0 = 63.0
+PHI0 = 0.0
+
+"Inserir data inicial no formato apresentado %m/%d/%Y %H:%M:%S"
+
+data = 11/10/2022 18:00:00
+Passo de Tempo = 10
+Divisoes da Terra = 20
+
+" Geometria do Cubsat "
+
+massa = 3.0 
+largura = 0.1  
+comprimento = 0.1  
+altura = 0.2
+  
+" Intensidade radiante do sol e terra e valores de emissividade "
+
+Radiacao solar = 1367.0 
+Radiacao da Terra = 267.0 
+emissividade da Terra = 1.0 
+Absortividade das faces = 1.0 
+Reflectividade da Terra = 0.3 
