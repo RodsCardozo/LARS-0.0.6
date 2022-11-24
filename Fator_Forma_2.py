@@ -32,10 +32,10 @@ def fator_forma_montecarlo(altitude):
 import random
 import math
 
-def fator_forma_perpendicular(altitude):
+def fator_forma_perpendicular(altitude, raio_terra):
     Quant_Teste=1000000
     d= altitude #Altitude
-    Raio_Terra= 6371.000 #Raio da terra
+    Raio_Terra= raio_terra #Raio da terra
     Orbita= d - Raio_Terra
 
     Counter=0
@@ -88,6 +88,21 @@ def fator_forma_classico(vetor_posicao, angulo):
     return FS
 
 if __name__ == '__main__':
-    print(f'fator de forma frontal: {fator_forma_montecarlo(7000.000)}')
+    '''print(f'fator de forma frontal: {fator_forma_montecarlo(7000.000)}')
     print(f'fator de forma modelo analitico: {fator_forma_classico(7000.000, np.pi/2)}')
-    print(f'fator de forma perpendicular: {fator_forma_perpendicular(7000.00)}')
+    print(f'fator de forma perpendicular: {fator_forma_perpendicular(7000.00)}')'''
+    ff_analitico = []
+    ff_montecarlo = []
+    Terra = np.linspace(6300,6500,5)
+    altitude = np.linspace(6700, 7400, 5)
+    for i in range(0,len(Terra),1):
+        for j in range(0,len(altitude),1):
+            ff_analitico.append(fator_forma_classico(altitude[j],np.pi/2))
+            ff_montecarlo.append(fator_forma_perpendicular(altitude[j],Terra[i]))
+    import pandas as pd
+    df = pd.DataFrame(ff_analitico, columns=['fator de forma analitico'])
+    df['fator de forma montecarlo'] = ff_montecarlo
+    df['erro'] = df['fator de forma analitico'] - df['fator de forma montecarlo']
+    df.plot(y='erro')
+
+    df.to_csv('ff.csv', sep=',')
