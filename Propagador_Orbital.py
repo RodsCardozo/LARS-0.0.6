@@ -119,14 +119,23 @@ def propagador_orbital(data, semi_eixo, excentricidade, Raan, argumento_perigeu,
     wy3_i = float(psip * np.sin(teta) * np.sin(phi) + tetap * np.cos(phi))  # velocidade angular do corpo em y
     wz3_i = float(psip * np.cos(teta) + phip)  # velocidade angular do corpo em z
 
-    q0 = float((np.cos(psi / 2) * np.cos(teta / 2) * np.cos(phi / 2) - np.sin(psi / 2) * np.cos(teta / 2) * np.sin(
+    '''q0 = float((np.cos(psi / 2) * np.cos(teta / 2) * np.cos(phi / 2) - np.sin(psi / 2) * np.cos(teta / 2) * np.sin(
               phi / 2)))  # quaternion q0
     q1 = float((np.cos(psi / 2) * np.sin(teta / 2) * np.sin(phi / 2) - np.sin(psi / 2) * np.sin(teta / 2) * np.cos(
                 phi / 2)))  # quaternion q1
     q2 = float((np.cos(psi / 2) * np.sin(teta / 2) * np.cos(phi / 2) + np.sin(psi / 2) * np.sin(teta / 2) * np.sin(
                 phi / 2)))  # quaternion q2
     q3 = float((np.sin(psi / 2) * np.cos(teta / 2) * np.cos(phi / 2) + np.cos(psi / 2) * np.cos(teta / 2) * np.sin(
-                phi / 2)))  # quaternion q3
+                phi / 2)))  # quaternion q3'''
+
+    q0 = float((np.cos(psi / 2) * np.cos(teta / 2) * np.cos(phi / 2) - np.sin(psi / 2) * np.cos(teta / 2) * np.sin(
+        phi / 2)))  # quaternion q0
+    q1 = float((np.cos(psi / 2) * np.sin(teta / 2) * np.cos(phi / 2) + np.sin(psi / 2) * np.sin(teta / 2) * np.sin(
+        phi / 2)))  # quaternion q1
+    q2 = float((np.sin(psi / 2) * np.sin(teta / 2) * np.cos(phi / 2) - np.cos(psi / 2) * np.sin(teta / 2) * np.sin(
+        phi / 2)))  # quaternion q2
+    q3 = float((np.cos(psi / 2) * np.cos(teta / 2) * np.sin(phi / 2) + np.sin(psi / 2) * np.cos(teta / 2) * np.cos(
+        phi / 2)))  # quaternion q3
 
     x_rot = np.cos(argumento_perigeu) * np.cos(Raan) - np.cos(inclinacao) * np.sin(argumento_perigeu) * np.sin(Raan)
     y_rot = np.cos(argumento_perigeu) * np.sin(Raan) + np.cos(inclinacao) * np.sin(argumento_perigeu) * np.cos(Raan)
@@ -233,10 +242,10 @@ def propagador_orbital(data, semi_eixo, excentricidade, Raan, argumento_perigeu,
     solucao['Z_perifocal'] = 0
     solucao['distancia'] = np.sqrt(solucao['X_perifocal']**2 + solucao['Y_perifocal']**2)
 
-    df = pd.DataFrame()
+    '''df = pd.DataFrame()
     phi = []
     for i in range(0, len(solution), 1):
-        a = (np.arctan2(2*(solucao.iloc[i, 8]*solucao.iloc[i, 9] - solucao.iloc[i, 6]*solucao.iloc[i, 7]), 2*(solucao.iloc[i, 7]*solucao.iloc[i, 9] + solucao.iloc[i, 6]*solucao.iloc[i, 8])))
+        a = (np.arctan2(2*(solucao.iloc[i, 8]*solucao.iloc[i, 9] + solucao.iloc[i, 6]*solucao.iloc[i, 7]), -2*(solucao.iloc[i, 7]*solucao.iloc[i, 9] - solucao.iloc[i, 6]*solucao.iloc[i, 8])))
         if np.linalg.norm(a) < 0.000000001:
             phi.append(0.0)
         elif np.linalg.norm(np.linalg.norm(a) - np.pi) < 0.000001:
@@ -262,7 +271,60 @@ def propagador_orbital(data, semi_eixo, excentricidade, Raan, argumento_perigeu,
 
     psi = []
     for i in range(0, len(solution), 1):
-        a = (np.arctan2(2*(solucao.iloc[i, 8]*solucao.iloc[i, 9] + solucao.iloc[i, 6]*solucao.iloc[i, 7]), -2*(solucao.iloc[i, 7]*solucao.iloc[i, 9] - solucao.iloc[i, 6]*solucao.iloc[i, 8])))
+        a = (np.arctan2(2*(solucao.iloc[i, 8]*solucao.iloc[i, 9] - solucao.iloc[i, 6]*solucao.iloc[i, 7]), 2*(solucao.iloc[i, 7]*solucao.iloc[i, 9] + solucao.iloc[i, 6]*solucao.iloc[i, 8])))
+        if np.linalg.norm(a) < 0.000000001:
+            psi.append(0.0)
+        elif np.linalg.norm(np.linalg.norm(a) - np.pi) < 0.000001:
+            psi.append(0.0)
+        else:
+            psi.append(a)
+
+    dfpsi = pd.DataFrame(np.unwrap(psi), columns=['PSI'])
+    df = pd.concat([df, dfpsi], axis=1)'''
+
+    df = pd.DataFrame()
+    phi = []
+    for i in range(0, len(solution), 1):
+        q0 = solucao.iloc[i, 6]
+        q1 = solucao.iloc[i, 7]
+        q2 = solucao.iloc[i, 8]
+        q3 = solucao.iloc[i, 9]
+        a = np.arctan2(2*(q1*q3 - q0*q2), 2*(q2*q3 + q0*q1))
+        if np.linalg.norm(a) < 0.000000001:
+            phi.append(0.0)
+        elif np.linalg.norm(np.linalg.norm(a) - np.pi) < 0.000001:
+            phi.append(0.0)
+        else:
+            phi.append(a)
+
+    dfphi = pd.DataFrame(np.unwrap(phi), columns=['PHI'])
+    df = pd.concat([df, dfphi], axis=1)
+
+    teta = []
+    for i in range(0, len(solution), 1):
+        q0 = solucao.iloc[i, 6]
+        q1 = solucao.iloc[i, 7]
+        q2 = solucao.iloc[i, 8]
+        q3 = solucao.iloc[i, 9]
+        a = np.arccos(2*(q0**2 + q3**2) - 1)
+
+        if np.linalg.norm(a) < 0.000000001:
+            teta.append(0.0)
+        elif a == -np.pi:
+            teta.append(0.0)
+        else:
+            teta.append(a)
+    dfteta = pd.DataFrame(teta, columns=['TETA'])
+    df = pd.concat([df, dfteta], axis=1)
+
+    psi = []
+    for i in range(0, len(solution), 1):
+        q0 = solucao.iloc[i, 6]
+        q1 = solucao.iloc[i, 7]
+        q2 = solucao.iloc[i, 8]
+        q3 = solucao.iloc[i, 9]
+        a = np.arctan2((2*q1*q3 + 2*q0*q2), -(2*q2*q3 - 2*q0*q1))
+
         if np.linalg.norm(a) < 0.000000001:
             psi.append(0.0)
         elif np.linalg.norm(np.linalg.norm(a) - np.pi) < 0.000001:
@@ -272,7 +334,6 @@ def propagador_orbital(data, semi_eixo, excentricidade, Raan, argumento_perigeu,
 
     dfpsi = pd.DataFrame(np.unwrap(psi), columns=['PSI'])
     df = pd.concat([df, dfpsi], axis=1)
-
     '''df = pd.DataFrame()
     df['PHI'] = np.unwrap(np.arctan2(2*(solucao['q2']*solucao['q3'] - solucao['q0']*solucao['q1']), 2*(solucao['q1']*solucao['q3'] + solucao['q0']*solucao['q2'])))
     df['TETA'] = np.arccos(2*(solucao['q0']**2 + solucao['q3']**2) - 1)

@@ -101,9 +101,9 @@ def calor_incidente(posicao_orientacao, Radiacao_solar, Radiacao_Terra, emissivi
         for i in range(0, len(Posicao_orientacao), 1):
             A = Ni[j]
 
-            psi = float(Posicao_orientacao.iloc[i, 0])
+            psi = float(Posicao_orientacao.iloc[i, 2])
             teta = float(Posicao_orientacao.iloc[i, 1])
-            phi = float(Posicao_orientacao.iloc[i, 2])
+            phi = float(Posicao_orientacao.iloc[i, 0])
 
             vetor = A
 
