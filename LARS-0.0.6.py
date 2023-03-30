@@ -30,7 +30,7 @@ def resource_path(relative_path):
 
 df = pd.read_csv(resource_path("Dados\dados_entrada.csv"), sep='=', engine='python', on_bad_lines='skip')
 SMA = float(df.iloc[0, 0])
-a = float(df.iloc[1, 0])  # ecentricidade da orbita
+a = float(df.iloc[1, 0])  # excentricidade da orbita
 if a < 0.002:
     ecc = 0.002
 else:
@@ -52,7 +52,7 @@ T_orbita = periodo_orbital(SMA)
 
 PSIP = float(df.iloc[11, 0])
 TETAP = float(df.iloc[12, 0])
-PHIP = (2*np.pi)/T_orbita #
+PHIP = (2*np.pi)/T_orbita
 psi0 = float(df.iloc[14, 0])
 teta0 = float(df.iloc[15, 0])
 phi0 = float(df.iloc[16, 0])
@@ -79,9 +79,9 @@ Propagacao_orbital = propagador_orbital(data, SMA, ecc, Raan, arg_per, true_anom
 
 calor_total = calor_incidente(Propagacao_orbital, Is, Ir, e, ai, gama, num_orbita)
 size = SMA*1.1
-#plot_animacao = Plots.plot_animacao_orbita(Propagacao_orbital, size, num_orbita)
-#plot_groundtrack3d = Plots.plot_groundtrack_3D(Propagacao_orbital)
-#plot_groundtrack2d = Plots.plot_groundtrack_2D(Propagacao_orbital)
+plot_animacao = Plots.plot_animacao_orbita(Propagacao_orbital, size, num_orbita)
+plot_groundtrack3d = Plots.plot_groundtrack_3D(Propagacao_orbital)
+plot_groundtrack2d = Plots.plot_groundtrack_2D(Propagacao_orbital)
 plot_calor_sol = Plots.calor_solar(calor_total)
 plot_calor_Terra = Plots.calor_IR_Terra(calor_total)
 plot_calor_albedo = Plots.calor_albedo(calor_total)

@@ -23,8 +23,6 @@ def calor_incidente(posicao_orientacao, Radiacao_solar, Radiacao_Terra, emissivi
     & numero_divisoes = divisao da terra em n elementos de area
     """
     print("Calculando calor")
-    import Fator_Forma_2
-    import matplotlib.pyplot as plt
     import icosphere
     from Fator_Forma_2 import fator_forma_classico as FS
     import numpy as np
@@ -54,31 +52,7 @@ def calor_incidente(posicao_orientacao, Radiacao_solar, Radiacao_Terra, emissivi
 
     # divisao da terra em elementos de area utilizando um icosaedro
     Raio_terra = 6371
-    nu = numero_divisoes
-    vertices, faces = icosphere.icosphere(nu)
-    center = []
-    for i in range(0, len(faces), 1):
 
-        a = faces[i][0]
-        b = faces[i][1]
-        c = faces[i][2]
-        A = vertices[a]*(Raio_terra)
-        B = vertices[b]*(Raio_terra)
-        C = vertices[c]*(Raio_terra)
-        x = float(A[0] + B[0] + C[0])
-        y = float(A[1] + B[1] + C[1])
-        z = float(A[2] + B[2] + C[2])
-        center.append([x / 3, y / 3, z / 3])
-
-    As = (4*np.pi*(Raio_terra)**2)/len(center) # area de cada elemento
-
-    vet_terra = pd.DataFrame(center, columns=['Terra_X', 'Terra_Y', 'Terra_Z'])
-    Ai = [a * c,
-          b * c,
-          a * c,
-          b * c,
-          a * b,
-          a * b]
     Ni = [[1, 0, 0],
           [0, 1, 0],
           [-1, 0, 0],
@@ -126,15 +100,8 @@ def calor_incidente(posicao_orientacao, Radiacao_solar, Radiacao_Terra, emissivi
         R = []
         Posicao_orientacao = pd.concat([Posicao_orientacao, df2], axis=1)
 
-    Posicao_orientacao = pd.concat([Posicao_orientacao, vet_terra], axis=1)
-    Posicao_orientacao['r'] = np.sqrt(Posicao_orientacao['X_ECI']**2 + Posicao_orientacao['Y_ECI']**2 + Posicao_orientacao['Z_ECI']**2)
-    Posicao_orientacao['fim'] = 1
     import os.path
     Posicao_orientacao.to_csv(os.path.join('./data/', 'Posicao_orientacao.csv'), sep=',')
-
-    vetor_terra = []
-    for i in range(0, len(vet_terra), 1):
-        vetor_terra.append(np.array([(vet_terra.iloc[i, 0]), (vet_terra.iloc[i, 1]), (vet_terra.iloc[i, 2])]))
 
     vetor_posicao = []
     for i in range(0, len(prop_orb), 1):
