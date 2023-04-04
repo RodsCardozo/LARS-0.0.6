@@ -143,7 +143,7 @@ def propagador_orbital2(data, semi_eixo, excentricidade, Raan, argumento_perigeu
                  + np.sin(inc0) * np.cos(arg_per0) * yp
                  + np.cos(inc0)*zp)
         posicao = np.linalg.norm(np.array([X_ECI, Y_ECI, Z_ECI]))
-
+        #print(f'valor da longitude RAAN: {lamb_e}')
         RAAN = lamb_e - ((2*np.pi)/(24*3600 + 56*60 + 4))*DELTAT
 
         lamb_e = RAAN
@@ -162,7 +162,7 @@ def propagador_orbital2(data, semi_eixo, excentricidade, Raan, argumento_perigeu
 
         r = np.array([X_ECEF, Y_ECEF, Z_ECEF])
 
-        latitude = np.degrees((np.arctan2(r[2], np.sqrt(r[0] ** 2 + r[1] ** 2))))
+        latitude = np.degrees((np.arcsin(r[2]/np.linalg.norm(r))))
         longitude = np.degrees((np.arctan2(r[1], r[0])))
 
         lat.append(latitude)
@@ -190,8 +190,9 @@ def propagador_orbital2(data, semi_eixo, excentricidade, Raan, argumento_perigeu
         time_simu.append(cont)
         final_date = timedelta(seconds=Time_step)
         ini_date = ini_date + final_date
+        OMEGA = -1.5*((np.sqrt(mu) * J2 * R_terra**2) / ((1 - ecc0**2)**2 * np.linalg.norm(r)**(7/2))) * np.cos(inc0)
         data.append(ini_date)
-
+        #print(f'velocidade em RAAN: {OMEGA}')
     solucao = pd.DataFrame(solution, columns=['h', 'ecc', 'anomalia_verdadeira', 'raan', 'inc', 'arg_per'])
     a = copy.deepcopy(solucao)
     solucao['X_perifocal'] = (solucao['h']**2/mu)*(1/(1 + solucao['ecc']*np.cos(solucao['anomalia_verdadeira'])))*np.cos(solucao['anomalia_verdadeira'])
@@ -220,10 +221,10 @@ def propagador_orbital2(data, semi_eixo, excentricidade, Raan, argumento_perigeu
     '''df3 = pd.DataFrame(data, columns=['Data'])
     df = pd.concat([df, df3], axis=1)'''
 
-    df1 = pd.DataFrame(lat, columns=['latitude'])
+    df1 = pd.DataFrame((lat), columns=['latitude'])
     df = pd.concat([df, df1], axis=1)
 
-    df2 = pd.DataFrame(long, columns=['longitude'])
+    df2 = pd.DataFrame((long), columns=['longitude'])
     df = pd.concat([df, df2], axis=1)
 
     df3 = pd.DataFrame(data, columns=['Data'])
@@ -231,25 +232,14 @@ def propagador_orbital2(data, semi_eixo, excentricidade, Raan, argumento_perigeu
 
     df4 = pd.DataFrame(time_simu, columns=['Tempo'])
     df = pd.concat([df, df4], axis=1)
-    df = pd.concat([df, a], axis=1)
+    df['Raan'] = a['raan']
     import os.path
 
-    df.to_csv(os.path.join('./data/', 'posicao_tempo2.csv'), sep=',')
+    df.to_csv(os.path.join('./data/', 'posicao_tempo2.csv'), sep=',', index = False, columns=df.columns[0:])
     import os.path
     #solucao.to_csv(os.path.join('./data/', 'solver2.csv'), sep=',')
 
-    return print("END")
-
-
-
-
-
-
-
-
-
-
-
+    return df
 
 
 if __name__ == '__main__':
@@ -263,5 +253,7 @@ if __name__ == '__main__':
     import os, sys
     input_string = ' 11/10/2022 18:00:00'
     data = datetime.strptime(input_string, " %m/%d/%Y %H:%M:%S")
-    propagador_orbital2(data, 6800.0, 0.002, 0.0, 0.0, 0.0, 52, 5, 0.1, 3.0, 0.1, 0.1, 0.2) #(data, semi_eixo, excentricidade, Raan, argumento_perigeu, anomalia_verdadeira,
+    df = propagador_orbital2(data, 6800.0, 0.002, 0.0, 0.0, 0.0, 52, 20, 1, 3.0, 0.1, 0.1, 0.2) #(data, semi_eixo, excentricidade, Raan, argumento_perigeu, anomalia_verdadeira,
                                                 # inclinacao, num_orbitas, delt, massa, largura, comprimento, altura)
+    from Plots import plot_groundtrack_3D as plt3d
+    plt3d(df)

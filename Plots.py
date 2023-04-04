@@ -35,13 +35,15 @@ def plot_groundtrack_3D(dataframe):
 
     fig = go.Figure()
 
-    for i, (lat, lon) in enumerate(zip(df.columns[6::2], df.columns[7::2])):
-        fig.add_trace(go.Scattergeo(
-            lon=df[lon],
-            lat=df[lat],
-            mode='lines',
-            line=dict(width=2, color='rgb(213,62,79)'
-                      )))
+
+    fig.add_trace(go.Scattergeo(
+        lon=df['longitude'],
+        lat=df['latitude'],
+        mode='lines',
+        line=dict(width=2, color='rgb(213,62,79)'
+                      ),
+        connectgaps=False)
+        )
 
     fig.update_layout(
         title_text='Contour lines over globe<br>(Click and drag to rotate)',
