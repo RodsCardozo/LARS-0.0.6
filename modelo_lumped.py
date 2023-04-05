@@ -223,27 +223,24 @@ K = {'1': [2,4,5,6],
      '4': [1,2,5,6],
      '5': [1,2,3,4],
      '6': [1,2,3,4]
-}
+     }
+'''
+I = []
+J = []
+for chave, valor in K.items():
+      I.append(int(chave))
+      J.append((valor))
+print(I)
+print(J)
 
-print(K)
-N = 6
-T = {}
+M_K = np.zeros((6,6))
+for i in range(0,len(I)):
+      for j in range(0, len(J)):
+            if I[i] == J[j]:
+                  M_K[i,j] = 0
+            elif 
 
-for x in range(1, N):
-    T["T{0}".format(x)] = 50
-print(T)
-
-M_K = np.zeros((N,N))
-A = []
-for i in range(1, len(K)):
-      A.append(K['{0}'.format(i)])
-
-print(lump.loc(0))
-
-
-
-
-
+print(M_K)'''
 
 
 

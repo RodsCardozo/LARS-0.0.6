@@ -256,4 +256,5 @@ if __name__ == '__main__':
     df = propagador_orbital2(data, 6800.0, 0.002, 0.0, 0.0, 0.0, 52, 20, 1, 3.0, 0.1, 0.1, 0.2) #(data, semi_eixo, excentricidade, Raan, argumento_perigeu, anomalia_verdadeira,
                                                 # inclinacao, num_orbitas, delt, massa, largura, comprimento, altura)
     from Plots import plot_groundtrack_3D as plt3d
+
     plt3d(df)

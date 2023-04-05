@@ -19,7 +19,7 @@ Inclinacao = 97.0
 mu = 398600  
 J2 = 1.08263e-3  
 Raio da Terra = 6378  
-numemor de orbitas = 5.0 
+numero de orbitas = 1 
 
 "Dados da atitude"
 
