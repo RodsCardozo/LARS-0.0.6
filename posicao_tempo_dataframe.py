@@ -61,7 +61,8 @@ def tempo_visada(dataframe, coordenadas_alvo: list, angulo_elevacao: float, incl
                                    df.iloc[i, 1],
                                    df.iloc[i, 2]]) / (np.linalg.norm([df.iloc[i, 0], df.iloc[i, 1], df.iloc[i, 2]])
                                                       * np.linalg.norm(posicao_gs))
-
+        posicoes = []
+        vetor_posicoes = []
         # Maximo angulo central da Terra
         lamb_max = np.pi/2 - (e) - (n_max)
         #print(lamb_max)
